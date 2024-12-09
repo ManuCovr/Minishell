@@ -6,17 +6,23 @@
 #    By: mde-maga <mtmpfb@gmail.com>                +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/09/30 11:14:44 by mde-maga          #+#    #+#              #
-#    Updated: 2024/12/09 11:03:56 by mde-maga         ###   ########.fr        #
+#    Updated: 2024/12/09 17:51:36 by mde-maga         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 NAME = minishell
 
-SRCS = builtins/echo.c
+SRCS = execute/builtins/cd.c \
+		execute/builtins/echo.c \
+
+OBJS = $(SRCS:.c=.o)
 
 CC = clang
+CFLAGS = -Wall -Wextra -Werror -Iheaders
+ 
+LIBFT_DIR = utils/libft
+LIBFT = $(LIBFT_DIR)/libft.a
 
-CFLAGS = -Wall -Wextra -Werror -I
 
 # Reset
 Color_Off='\033[0m'       # Text Reset
@@ -99,19 +105,26 @@ HOWTO = @echo ${BIGreen}"To run the program write:"${BIWhite}"./${NAME}"${Color_
 
 all: $(NAME)
 
-$(NAME):
-	@make all -s -C libft
-	@cc $(CFLAGS) $(SRCS) -o $(NAME)
+$(NAME): $(OBJS) $(LIBFT)
+	$(CC) $(CFLAGS) $(OBJS) $(LIBFT) -o $(NAME)
 	$(MSG1)
-	${HOWTO}
+	$(HOWTO)
+
+%.o: %.c
+	$(CC) $(CFLAGS) -c $< -o $@
+
+$(LIBFT):
+	@make -C $(LIBFT_DIR)
 
 clean:
-	@make clean -s -C libft
+	@rm -f $(OBJS)
+	@make clean -C $(LIBFT_DIR)
 	$(MSG2)
 
 fclean: clean
-	$(RM) $(NAME)
-	@make fclean -s -C libft
-	${MSG3}
+	@rm -f $(NAME)
+	@make fclean -C $(LIBFT_DIR)
+	$(MSG3)
+
 
 re: fclean all

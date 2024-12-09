@@ -1,34 +1,21 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   minishell.h                                        :+:      :+:    :+:   */
+/*   cd.c                                               :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: mde-maga <mtmpfb@gmail.com>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/10/02 14:18:11 by mde-maga          #+#    #+#             */
-/*   Updated: 2024/12/09 10:52:36 by mde-maga         ###   ########.fr       */
+/*   Created: 2024/12/09 16:27:20 by mde-maga          #+#    #+#             */
+/*   Updated: 2024/12/09 17:41:43 by mde-maga         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef MINISHELL_H
-# define MINISHELL_H
+#include "../headers/minishell.h"
 
-# include "../libft/libft.h"
-# include <stdlib.h>
-# include <unistd.h>
-# include <stdio.h>
-# include <string.h>
-# include <fcntl.h>
-# include <dirent.h>
-# include <sys/wait.h>
-# include <limits.h>
-# include <errno.h>
-# include <signal.h>
-
-# define ERROR 1
-# define SUCCESS 0
-
-
-int	ft_echo(char **args);
-
-#endif
+static void cd_error_manager(void)
+{
+	ft_putstr_fd("cd: Error retrieving current directory: ", 2);
+	ft_putstr_fd("Cannot access parent directories: ", 2);
+	ft_putstr_fd("No such file or directory\n", 2);
+	exit_status(1);
+}
